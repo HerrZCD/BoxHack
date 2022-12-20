@@ -70,6 +70,12 @@ VOID Cleanup()
         g_pD3D->Release();
 }
 
+VOID DrawBox(float x, float y, float width, float height) {
+    D3DXVECTOR2 vector[5]{ {x, y}, {x + width, y}, {x + width, y + height}, {x, y + height}, {x, y} };
+    g_line->SetWidth(1);
+    g_line->Draw(vector, 5, D3DCOLOR_XRGB(255, 255, 255));
+}
+
 //-----------------------------------------------------------------------------
 // Name: Render()
 // Desc: Draws the scene
@@ -86,10 +92,7 @@ VOID Render()
     if (SUCCEEDED(g_pd3dDevice->BeginScene()))
     {
         // Rendering of scene objects can happen here
-
-        D3DXVECTOR2 vector[2]{ {0, 0}, {40, 40} };
-        g_line->SetWidth(1);
-        g_line->Draw(vector, 2, D3DCOLOR_XRGB(255, 0, 0));
+        DrawBox(20, 20, 100, 200);
 
         // End the scene
         g_pd3dDevice->EndScene();
