@@ -29,5 +29,8 @@
     <ClInclude Include="d3d.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="enemy_data.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

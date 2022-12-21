@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d.h" />
+    <ClInclude Include="enemy_data.h" />
     <ClInclude Include="memory_util.h" />
     <ClInclude Include="draw_window.h" />
   </ItemGroup>

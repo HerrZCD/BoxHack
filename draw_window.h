@@ -15,10 +15,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return 0;
 
     case WM_PAINT:
-        Render();
         ValidateRect(hWnd, NULL);
         return 0;
     }
+    Render();
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
@@ -34,7 +34,13 @@ HWND CreateTransparentWindow(HWND game) {
     window_class.lpfnWndProc = WndProc;
     window_class.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
 	RegisterClassExA(&window_class);
-    HWND window = CreateWindowExA(WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED, window_name, window_name, WS_POPUP, 0, 0, 800, 800, NULL, NULL, GetModuleHandle(NULL), NULL);
+    RECT rect;
+    HWND hwnd = FindWindowA(NULL, "Counter-Strike");
+    GetWindowRect(hwnd, &rect);
+
+    int view_port_width = rect.right - rect.left;
+    int view_port_height = rect.bottom - rect.top;
+    HWND window = CreateWindowExA(WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED, window_name, window_name, WS_POPUP, 0, 0, 1280, 960, NULL, NULL, GetModuleHandle(NULL), NULL);
     SetLayeredWindowAttributes(window, 0, RGB(0, 1, 0), LWA_COLORKEY);
     // HWND window = CreateWindowExA(WS_EX_TOPMOST, window_name, window_name, WS_POPUP, 0, 0, 800, 800, NULL, NULL, GetModuleHandle(NULL), NULL);
     ShowWindow(window, SW_SHOW);

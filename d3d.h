@@ -1,6 +1,7 @@
 
 #include <d3d9.h>
 #include <D3dx9core.h>
+#include "enemy_data.h"
 #pragma warning( disable : 4996 ) // disable deprecated warning 
 #include <strsafe.h>
 #pragma warning( default : 4996 )
@@ -92,7 +93,8 @@ VOID Render()
     if (SUCCEEDED(g_pd3dDevice->BeginScene()))
     {
         // Rendering of scene objects can happen here
-        DrawBox(20, 20, 100, 200);
+        // DrawBox(screen_position_x, screen_position_y, 100, 200);
+        DrawBox(screen_position_x, screen_position_y, 100, 200);
 
         // End the scene
         g_pd3dDevice->EndScene();

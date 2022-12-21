@@ -4,10 +4,13 @@
 float screen_position_x = 0.0f;
 float screen_position_y = 0.0f;
 
+// hw.dll+E956A0
+
 void GetEnemyPosition(int processId) {
 	HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, false, processId);
 	char* dllBase = GetModuleBase(L"hw.dll", processId);
 	char* clientBase = GetModuleBase(L"client.dll", processId);
+	char* exeBase = GetModuleBase(L"cstrike.exe", processId);
 	float matrix[4][4] = { 0 };
 
 	RECT rect;
@@ -36,7 +39,7 @@ void GetEnemyPosition(int processId) {
 		std::cout << "enemy postion x: " << (float)enemy_x << std::endl;
 		std::cout << "enemy postion y: " << (float)enemy_y << std::endl;
 		std::cout << "enemy postion z: " << (float)enemy_z << std::endl;
-		ReadProcessMemory(process, (LPCVOID)((DWORD)dllBase + 0x78E5A4), &matrix, 16 * sizeof(float), NULL);
+		ReadProcessMemory(process, (LPCVOID)((DWORD)dllBase + 0xE956A0), &matrix, 16 * sizeof(float), NULL);
 		std::cout << "********************************************" << std::endl;
 		std::cout << matrix[0][0] << " | " << matrix[0][1] << " | " << matrix[0][2] << " | " << matrix[0][3] << std::endl;
 		std::cout << matrix[1][0] << " | " << matrix[1][1] << " | " << matrix[1][2] << " | " << matrix[1][3] << std::endl;
@@ -44,14 +47,24 @@ void GetEnemyPosition(int processId) {
 		std::cout << matrix[3][0] << " | " << matrix[3][1] << " | " << matrix[3][2] << " | " << matrix[3][3] << std::endl;
 		std::cout << "********************************************" << std::endl;
 
-		int camera_z = matrix[0][2] * enemy_x + matrix[1][2] * enemy_y + matrix[2][2] * enemy_z + matrix[3][2];
-		float ratio = (float)1 / camera_z;
-		screen_position_x = (matrix[0][0] * enemy_x + matrix[1][0] * enemy_y + matrix[2][0] * enemy_z + matrix[3][0]) * ratio * (float)view_port_width;
-		screen_position_x = (matrix[0][1] * enemy_x + matrix[1][1] * enemy_y + matrix[2][1] * enemy_z + matrix[3][1]) * ratio * (float)view_port_height;
+		/*float clip_x =  matrix[0][0] * enemy_x + matrix[0][1] * enemy_y + matrix[0][2] * enemy_z + matrix[0][3];
+		float clip_y = matrix[1][0] * enemy_x + matrix[1][1] * enemy_y + matrix[1][2] * enemy_z + matrix[1][3];
+		float clip_z = matrix[2][0] * enemy_x + matrix[2][1] * enemy_y + matrix[2][2] * enemy_z + matrix[2][3];
+		float clip_w =  matrix[3][0] * enemy_x + matrix[3][1] * enemy_y + matrix[3][2] * enemy_z + matrix[3][3];*/
+
+		float clip_x = matrix[0][0] * enemy_x + matrix[1][0] * enemy_y + matrix[2][0] * enemy_z + matrix[3][0];
+		float clip_y = matrix[0][1] * enemy_x + matrix[1][1] * enemy_y + matrix[2][1] * enemy_z + matrix[3][1];
+		float clip_z = matrix[0][2] * enemy_x + matrix[1][2] * enemy_y + matrix[2][2] * enemy_z + matrix[3][2];
+		float clip_w = matrix[0][3] * enemy_x + matrix[1][3] * enemy_y + matrix[2][3] * enemy_z + matrix[3][3];
+
+		if (clip_w < 0.1f)
+			continue;
+		float NDC_x = clip_x / clip_w;
+		float NDC_y = clip_y / clip_w;
+		float NDC_z = clip_z / clip_w;
+		screen_position_x = (view_port_width * NDC_x) + (NDC_x + view_port_width);
+		screen_position_y = -(view_port_height * NDC_y) + (NDC_y + view_port_height);
 		std::cout << "camera_x: " << screen_position_x << std::endl;
-		std::cout << "camera_y: " << screen_position_x << std::endl;
-
-
-		Sleep(100);
+		std::cout << "camera_y: " << screen_position_y << std::endl;
 	}
 }
