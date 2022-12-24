@@ -94,7 +94,13 @@ VOID Render()
     {
         // Rendering of scene objects can happen here
         // DrawBox(screen_position_x, screen_position_y, 100, 200);
-        DrawBox(screen_position_x, screen_position_y, 100, 200);
+        // DrawBox(screen_position_x, screen_position_y, 100, 200);
+        for (int i = 0; i < enemyNums; i++) {
+            EnemyPosition position = positions[i];
+            D3DXVECTOR2 vector[2]{ {position.head.x, position.head.y}, {position.foot.x, position.foot.y} };
+            g_line->SetWidth(3);
+            g_line->Draw(vector, 2, D3DCOLOR_XRGB(255, 255, 255));
+        }
 
         // End the scene
         g_pd3dDevice->EndScene();
