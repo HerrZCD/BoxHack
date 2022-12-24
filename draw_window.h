@@ -42,7 +42,6 @@ HWND CreateTransparentWindow(HWND game) {
     int view_port_height = rect.bottom - rect.top;
     HWND window = CreateWindowExA(WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED, window_name, window_name, WS_POPUP, 0, 0, 1280, 960, NULL, NULL, GetModuleHandle(NULL), NULL);
     SetLayeredWindowAttributes(window, 0, RGB(0, 1, 0), LWA_COLORKEY);
-    // HWND window = CreateWindowExA(WS_EX_TOPMOST, window_name, window_name, WS_POPUP, 0, 0, 800, 800, NULL, NULL, GetModuleHandle(NULL), NULL);
     ShowWindow(window, SW_SHOW);
 	UpdateWindow(window);
     InitD3D(window);
@@ -57,7 +56,6 @@ void MessageHandle(HWND game, HWND window) {
         HWND hwnd = FindWindowA(NULL, "Counter-Strike");
         GetWindowRect(hwnd, &rect);
         MoveWindow(window, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, TRUE);
-        // MoveWindow(window, 1249, 2535, 1000, 1000, TRUE);
 		if (PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessageA(&msg);

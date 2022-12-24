@@ -71,12 +71,6 @@ VOID Cleanup()
         g_pD3D->Release();
 }
 
-VOID DrawBox(float x, float y, float width, float height) {
-    D3DXVECTOR2 vector[5]{ {x, y}, {x + width, y}, {x + width, y + height}, {x, y + height}, {x, y} };
-    g_line->SetWidth(1);
-    g_line->Draw(vector, 5, D3DCOLOR_XRGB(255, 255, 255));
-}
-
 //-----------------------------------------------------------------------------
 // Name: Render()
 // Desc: Draws the scene
@@ -92,14 +86,11 @@ VOID Render()
     // Begin the scene
     if (SUCCEEDED(g_pd3dDevice->BeginScene()))
     {
-        // Rendering of scene objects can happen here
-        // DrawBox(screen_position_x, screen_position_y, 100, 200);
-        // DrawBox(screen_position_x, screen_position_y, 100, 200);
         for (int i = 0; i < enemyNums; i++) {
             EnemyPosition position = positions[i];
-            D3DXVECTOR2 vector[2]{ {position.head.x, position.head.y}, {position.foot.x, position.foot.y} };
-            g_line->SetWidth(3);
-            g_line->Draw(vector, 2, D3DCOLOR_XRGB(255, 255, 255));
+            D3DXVECTOR2 vector[5]{ {position.head.x - 10, position.head.y}, {position.head.x + 10, position.head.y}, {position.foot.x + 10, position.foot.y},  {position.foot.x - 10, position.foot.y}, {position.head.x - 10, position.head.y} };
+            g_line->SetWidth(1);
+            g_line->Draw(vector, 5, D3DCOLOR_XRGB(255, 255, 255));
         }
 
         // End the scene
